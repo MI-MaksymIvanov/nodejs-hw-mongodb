@@ -12,7 +12,7 @@ const PORT = Number(getEnvVar('PORT', '3000'));
 const setupServer = () => {
   const app = express();
 
-  app.use('/api', routes);
+  app.use('/', routes);
 
   app.use(cors());
   app.use(pino({ transport: { target: 'pino-pretty' } }));
