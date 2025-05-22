@@ -20,7 +20,7 @@ async function getContactsController(req, res) {
 }
 
 async function getContactByIdController(req, res) {
-  const { contactId } = req.params;
+  const contactId = req.params.id;
 
   const contact = await getContactById(contactId);
   console.log(contact);
@@ -48,7 +48,7 @@ async function createContactController(req, res) {
 }
 
 async function updateContactController(req, res) {
-  const { contactId } = req.params;
+  const contactId = req.params.id;
 
   const result = await updateContact(contactId, req.body);
   console.log(result);
@@ -65,7 +65,7 @@ async function updateContactController(req, res) {
 }
 
 async function deleteContactController(req, res) {
-  const { contactId } = req.params;
+  const contactId = req.params.id;
 
   const result = await deleteContact(contactId);
   console.log(result);
@@ -78,7 +78,7 @@ async function deleteContactController(req, res) {
 }
 
 async function replaceContactController(req, res) {
-  const { contactId } = req.params;
+  const contactId = req.params.id;
 
   const { value, updatedExisting } = await replaceContact(contactId, req.body);
 
