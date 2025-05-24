@@ -8,9 +8,23 @@ import {
   replaceContact,
 } from '../services/contacts.js';
 
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
+
+// GET ALL
 async function getContactsController(req, res) {
-  const contacts = await getAllContacts();
-  console.log(contacts);
+  const { page, perPage } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = parseSortParams(req.query);
+  const filter = parseFilterParams(req.query);
+
+  const contacts = await getAllContacts({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    filter,
+  });
 
   res.status(200).json({
     status: 200,
@@ -19,6 +33,7 @@ async function getContactsController(req, res) {
   });
 }
 
+// GET by ID
 async function getContactByIdController(req, res) {
   const { contactId } = req.params;
 
@@ -35,7 +50,7 @@ async function getContactByIdController(req, res) {
     data: contact,
   });
 }
-
+// POST
 async function createContactController(req, res) {
   const contact = await createContact(req.body);
   console.log(contact);
@@ -47,6 +62,7 @@ async function createContactController(req, res) {
   });
 }
 
+//PATCH
 async function updateContactController(req, res) {
   const { contactId } = req.params;
 
@@ -64,6 +80,7 @@ async function updateContactController(req, res) {
   });
 }
 
+//DELETE
 async function deleteContactController(req, res) {
   const { contactId } = req.params;
 
@@ -77,6 +94,7 @@ async function deleteContactController(req, res) {
   res.status(204).end();
 }
 
+//PUT
 async function replaceContactController(req, res) {
   const { contactId } = req.params;
 
