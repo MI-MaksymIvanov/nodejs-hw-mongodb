@@ -1,6 +1,6 @@
 function parseSortBy(value) {
   if (typeof value === 'undefined') {
-    return '_id';
+    return 'name';
   }
 
   const keys = [
@@ -15,7 +15,7 @@ function parseSortBy(value) {
   ];
 
   if (keys.includes(value) !== true) {
-    return '_id';
+    return 'name';
   }
 
   return value;

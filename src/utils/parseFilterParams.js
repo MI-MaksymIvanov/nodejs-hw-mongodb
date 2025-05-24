@@ -3,13 +3,22 @@ function parseType(type) {
     return undefined;
   }
 
-  const isValid = ['work', 'home', 'personal'].includes(type);
-  return isValid ? type : undefined;
+  const typesValid = ['work', 'home', 'personal'];
+  if (!typesValid.includes(type)) {
+    return undefined;
+  }
+
+  return type;
 }
 
 function parseIsFavourite(value) {
-  if (typeof value === 'string') return value === 'true';
-  if (typeof value === 'boolean') return value;
+  if (typeof value === 'string') {
+    return value === 'true';
+  }
+  if (typeof value === 'boolean') {
+    return value;
+  }
+
   return undefined;
 }
 
