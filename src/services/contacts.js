@@ -6,12 +6,15 @@ export async function getAllContacts({
   sortBy,
   sortOrder,
   filter,
+  userId,
 }) {
   const skip = page > 0 ? (page - 1) * perPage : 0;
 
+  const filters = { ...filter, userId };
+
   const [totalItems, contacts] = await Promise.all([
-    Contact.countDocuments(filter),
-    Contact.find(filter)
+    Contact.countDocuments(filters),
+    Contact.find(filters)
       .sort({ [sortBy]: sortOrder })
       .skip(skip)
       .limit(perPage),
@@ -30,28 +33,39 @@ export async function getAllContacts({
   };
 }
 
-export function getContactById(contactId) {
-  return Contact.findById(contactId);
+// GET by ID
+export function getContactById(contactId, userId) {
+  return Contact.findOne({ _id: contactId, userId });
 }
 
-export function deleteContact(contactId) {
-  return Contact.findByIdAndDelete(contactId);
+//DELETE
+export function deleteContact(contactId, userId) {
+  return Contact.findOneAndDelete({ _id: contactId, userId });
 }
 
-export function updateContact(contactId, payload) {
-  return Contact.findByIdAndUpdate(contactId, payload, { new: true });
+//PATCH
+export function updateContact(contactId, payload, userId) {
+  return Contact.findOneAndUpdate({ _id: contactId, userId }, payload, {
+    new: true,
+  });
 }
 
+// POST
 export function createContact(payload) {
   return Contact.create(payload);
 }
 
-export async function replaceContact(contactId, contact) {
-  const result = await Contact.findByIdAndUpdate(contactId, contact, {
-    new: true,
-    upsert: true,
-    includeResultMetadata: true,
-  });
+//PUT
+export async function replaceContact(contactId, contact, userId) {
+  const result = await Contact.findOneAndUpdate(
+    { _id: contactId, userId },
+    contact,
+    {
+      new: true,
+      upsert: true,
+      includeResultMetadata: true,
+    },
+  );
 
   return {
     values: result.value,
