@@ -1,4 +1,8 @@
+import * as fs from 'node:fs/promises';
+import path from 'node:path';
+
 import createHttpError from 'http-errors';
+
 import {
   getAllContacts,
   getContactById,
@@ -11,6 +15,8 @@ import {
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { uploadToCloudinary } from '../utils/uploadToCloudinary.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
 
 // GET ALL
 async function getContactsController(req, res) {
@@ -53,19 +59,44 @@ async function getContactByIdController(req, res) {
 
   res.status(200).json({
     status: 200,
-    message: `Successfuly found contact with id ${contactId}`,
+    message: `Successfully found contact with id ${contactId}`,
     data: contact,
   });
 }
 
 // POST
 async function createContactController(req, res) {
-  const contact = await createContact({ ...req.body, userId: req.user._id });
+  let photo = null;
+
+  if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+    const result = await uploadToCloudinary(req.file.path);
+
+    await fs.unlink(req.file.path);
+
+    photo = result.secure_url;
+  } else {
+    await fs.rename(
+      req.file.path,
+      path.resolve('src', 'uploads', 'photos', req.file.filename),
+    );
+
+    const port = getEnvVar('PORT');
+
+    photo = `http://localhost:${port}/photos/${req.file.filename}`;
+  }
+
+  // console.log(result);
+
+  const contact = await createContact({
+    ...req.body,
+    userId: req.user._id,
+    photo,
+  });
   // console.log(contact);
 
   res.status(201).json({
     status: 201,
-    message: 'Successfuly created a contact!',
+    message: 'Successfully created a contact!',
     data: contact,
   });
 }
@@ -74,7 +105,37 @@ async function createContactController(req, res) {
 async function updateContactController(req, res) {
   const { contactId } = req.params;
 
-  const result = await updateContact(contactId, req.body, req.user._id);
+  let photo = null;
+
+  if (req.file) {
+    if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+      const result = await uploadToCloudinary(req.file.path);
+
+      await fs.unlink(req.file.path);
+
+      photo = result.secure_url;
+    } else {
+      await fs.rename(
+        req.file.path,
+        path.resolve('src', 'uploads', 'photos', req.file.filename),
+      );
+
+      const port = getEnvVar('PORT');
+
+      photo = `http://localhost:${port}/photos/${req.file.filename}`;
+    }
+  }
+
+  const updateDataContact = {
+    ...req.body,
+    ...(photo && { photo }),
+  };
+
+  const result = await updateContact(
+    contactId,
+    updateDataContact,
+    req.user._id,
+  );
   // console.log(result);
 
   if (result === null) {
