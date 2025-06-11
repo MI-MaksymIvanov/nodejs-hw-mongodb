@@ -9,12 +9,15 @@ import {
   refreshController,
   sendResetEmailCotroller,
   resetPasswordController,
+  getOAuthUrlController,
+  confirmOAuthController,
 } from '../controllers/auth.js';
 import {
   registerSchema,
   loginSchema,
   sendResetEmailSchema,
   resetPasswordSchema,
+  confirmOAuthSchema,
 } from '../validation/auth.js';
 
 const router = express.Router();
@@ -56,6 +59,17 @@ router.post(
   jsonParser,
   validateBody(resetPasswordSchema),
   ctrlWrapper(resetPasswordController),
+);
+
+// get-oauth-url
+router.get('/get-oauth-url', ctrlWrapper(getOAuthUrlController));
+
+// confirm-oauth
+router.post(
+  '/confirm-oauth',
+  jsonParser,
+  validateBody(confirmOAuthSchema),
+  ctrlWrapper(confirmOAuthController),
 );
 
 export default router;
