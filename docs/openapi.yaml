@@ -6,11 +6,11 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  description: This is documantation of MI-Cotacts APP
+  description: This is documentation of MI-Cotacts APP
 
 tags:
   - name: Contacts
-    description: Operation with contscts
+    description: Operation with contacts
 
 servers:
   - url: http://localhost:3000
