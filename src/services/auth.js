@@ -165,7 +165,7 @@ export async function resetPassword(password, token) {
 
 // loginOrRegister
 export async function loginOrRegister(email, name) {
-  let user = await User.findOne({ name });
+  let user = await User.findOne({ email });
 
   if (user === null) {
     const password = await bcrypt.hash(

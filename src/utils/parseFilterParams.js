@@ -22,10 +22,10 @@ function parseIsFavourite(value) {
   return undefined;
 }
 
-export function parseFilterParams({ type, isFavourite }) {
+export function parseFilterParams({ contactType, isFavourite }) {
   const filter = {};
 
-  const parsedType = parseType(type);
+  const parsedType = parseType(contactType);
   if (parsedType !== undefined) {
     filter.contactType = parsedType;
   }
