@@ -7,7 +7,7 @@
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "description": "This is documantation of MI-Cotacts APP"
+    "description": "This is documentation of MI-Cotacts APP"
   },
   "servers": [
     {
@@ -20,7 +20,7 @@
   "tags": [
     {
       "name": "Contacts",
-      "description": "Operation with contscts"
+      "description": "Operation with contacts"
     }
   ],
   "paths": {
@@ -219,8 +219,7 @@
                   "type": "object",
                   "required": [
                     "status",
-                    "message",
-                    "data"
+                    "message"
                   ],
                   "properties": {
                     "status": {
@@ -266,7 +265,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Successfuly deleted contact"
+            "description": "Successfully deleted contact"
           },
           "401": {
             "$ref": "#/components/responses/401"
