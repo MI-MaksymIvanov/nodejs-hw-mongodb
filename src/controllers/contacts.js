@@ -68,21 +68,23 @@ async function getContactByIdController(req, res) {
 async function createContactController(req, res) {
   let photo = null;
 
-  if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
-    const result = await uploadToCloudinary(req.file.path);
+  if (req.file) {
+    if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+      const result = await uploadToCloudinary(req.file.path);
 
-    await fs.unlink(req.file.path);
+      await fs.unlink(req.file.path);
 
-    photo = result.secure_url;
-  } else {
-    await fs.rename(
-      req.file.path,
-      path.resolve('src', 'uploads', 'photos', req.file.filename),
-    );
+      photo = result.secure_url;
+    } else {
+      await fs.rename(
+        req.file.path,
+        path.resolve('src', 'uploads', 'photos', req.file.filename),
+      );
 
-    const port = getEnvVar('PORT');
+      const port = getEnvVar('PORT');
 
-    photo = `http://localhost:${port}/photos/${req.file.filename}`;
+      photo = `http://localhost:${port}/photos/${req.file.filename}`;
+    }
   }
 
   // console.log(result);
