@@ -321,8 +321,7 @@
                 "required": [
                   "name",
                   "phoneNumber",
-                  "contactType",
-                  "photo"
+                  "contactType"
                 ],
                 "properties": {
                   "name": {
